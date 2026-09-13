@@ -12,3 +12,7 @@ data/report_images/
 data/users.csv
 
 data/report_images/
+
+data/reports.csv
+
+data/*.legacy.csv

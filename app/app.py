@@ -561,7 +561,7 @@ def render_auth_page() -> None:
             if st.button(
                 "Sign In",
                 key="login_submit",
-                use_container_width=True,
+                width="stretch",
             ):
                 user = authenticate_user(email, password)
 
@@ -629,7 +629,7 @@ def render_auth_page() -> None:
             if st.button(
                 "Create Account",
                 key="register_submit",
-                use_container_width=True,
+                width="stretch",
             ):
                 if password != confirm:
                     st.error("Passwords do not match.")
@@ -1475,7 +1475,7 @@ with st.sidebar:
     if st.button(
         "↪  Log out",
         key="logout",
-        use_container_width=True,
+        width="stretch",
     ):
         st.session_state.authenticated = False
         st.session_state.user = None
@@ -1525,7 +1525,7 @@ if st.session_state.page == "Home":
         if st.button(
             "＋  Report a civic problem",
             key="home_report",
-            use_container_width=True,
+            width="stretch",
         ):
             st.session_state.page = "Report Problem"
             st.rerun()
@@ -1534,7 +1534,7 @@ if st.session_state.page == "Home":
         if st.button(
             "◈  Explore city insights",
             key="home_insights",
-            use_container_width=True,
+            width="stretch",
         ):
             st.session_state.page = "City Insights"
             st.rerun()
@@ -1700,7 +1700,7 @@ elif st.session_state.page == "Report Problem":
                 )
                 st.image(
                     image,
-                    use_container_width=True,
+                    width="stretch",
                     caption="Uploaded evidence",
                 )
 
@@ -1769,7 +1769,7 @@ elif st.session_state.page == "Report Problem":
     if st.button(
         "🔍  Analyse report",
         key="analyse_report",
-        use_container_width=True,
+        width="stretch",
     ):
         if not photo and not description.strip():
             st.warning("Please add a photo or a description before analysis.")
@@ -1868,7 +1868,7 @@ elif st.session_state.page == "Report Problem":
             with result_left:
                 st.image(
                     analysis["annotated"],
-                    use_container_width=True,
+                    width="stretch",
                     caption="AI-annotated image",
                 )
 
@@ -1914,7 +1914,7 @@ elif st.session_state.page == "Report Problem":
                 if st.button(
                     "✓  Submit this report",
                     key="submit_analysed",
-                    use_container_width=True,
+                    width="stretch",
                 ):
                     report_id = save_report(
                         user_id=str((st.session_state.user or {}).get("user_id", "")),
@@ -1978,7 +1978,7 @@ elif st.session_state.page == "Report Problem":
             if st.button(
                 "✓  Submit this report",
                 key="submit_non_ai",
-                use_container_width=True,
+                width="stretch",
             ):
                 report_id = save_report(
                         user_id=str((st.session_state.user or {}).get("user_id", "")),
@@ -2152,7 +2152,7 @@ elif st.session_state.page == "My Reports":
 
         st.dataframe(
             filtered[display_columns],
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -2416,3 +2416,4 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
