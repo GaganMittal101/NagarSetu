@@ -1,0 +1,11 @@
+source_class,civicfix_class,use_for_v1,description
+D00,Longitudinal Crack,YES,Longitudinal road crack
+D01,Longitudinal Crack,NO,Construction-joint longitudinal crack
+D10,Transverse Crack,YES,Transverse road crack
+D11,Transverse Crack,NO,Construction-joint transverse crack
+D20,Alligator Crack,YES,Alligator cracking
+D40,Pothole,YES,Pothole / rutting / separation category
+D43,Other Road Damage,NO,Crosswalk marking deterioration
+D44,Other Road Damage,NO,White-line marking deterioration
+D50,Utility Hole,NO,Utility/maintenance hatch
+D0w0,Unknown,NO,Rare malformed/unknown label

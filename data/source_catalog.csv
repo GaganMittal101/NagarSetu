@@ -1,0 +1,5 @@
+﻿source_name,source_type,location,use_for,status
+Jaipur Municipal Complaint Portal,Official complaint portal,Jaipur,workflow/category/metadata reference,Research/permission review
+Jaipur Street Lights Data,Government Open Data,Jaipur,streetlight geographic reference,Public dataset; verify freshness
+Official Jaipur Municipal Contacts,Government website,Jaipur,verified routing/reference,Public information
+CivicFix First-party Reports,First-party,CivicFix,training/evaluation/feedback,To be collected with consent

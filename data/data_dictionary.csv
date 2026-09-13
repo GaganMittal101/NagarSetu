@@ -1,0 +1,17 @@
+﻿field_name,data_type,role,description
+report_id,string,ID,Unique report identifier
+created_at,datetime,INPUT,Submission time
+category,categorical,TARGET,Verified issue category
+description,text,INPUT,User description
+image_path,string,INPUT,Evidence image reference
+city,categorical,INPUT,City
+area,text,INPUT,Area/ward/locality
+latitude,float,INPUT,Latitude
+longitude,float,INPUT,Longitude
+severity_label,ordinal,TARGET,Human-verified severity
+status,categorical,REFERENCE,Operational status
+department,categorical,REFERENCE/TARGET,Verified responsible team
+resolved_at,datetime,TARGET,Resolution timestamp
+resolution_hours,float,TARGET,Measured resolution duration
+confidence,float,OUTPUT,Model confidence; output only
+duplicate_probability,float,OUTPUT,Similarity-model output

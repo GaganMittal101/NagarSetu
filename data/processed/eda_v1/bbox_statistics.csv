@@ -1,0 +1,7 @@
+,box_width,box_width,box_height,box_height,box_area,box_area,damage_area_ratio,damage_area_ratio
+,mean,median,mean,median,mean,median,mean,median
+civicfix_class,,,,,,,,
+Alligator Crack,329.6799,291.0,165.3241,164.0,59260.8105,49572.0,0.1143,0.0956
+Longitudinal Crack,95.7518,79.0,131.6804,122.0,14635.9556,9000.0,0.0282,0.0174
+Pothole,120.1581,88.0,67.5855,50.0,11868.7879,4505.0,0.0229,0.0087
+Transverse Crack,247.6471,237.5,49.25,45.5,13445.2353,9233.5,0.0259,0.0178

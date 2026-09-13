@@ -1,0 +1,2 @@
+annotation_rows,unique_images,unique_classes,min_bbox_area_ratio,median_bbox_area_ratio,max_bbox_area_ratio,images_with_multiple_annotations
+8203,3785,10,0.0005864197530864,0.0190123456790123,0.6681481481481482,2162

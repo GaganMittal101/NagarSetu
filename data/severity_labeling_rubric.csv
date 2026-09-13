@@ -1,0 +1,5 @@
+severity_class,definition
+Low,Limited/localized issue with little immediate public impact
+Moderate,Noticeable issue affecting convenience or limited access
+High,Meaningful public safety/access/health/service impact
+Critical,Immediate or potentially severe public harm or major disruption

@@ -1,0 +1,2 @@
+report_id,user_id,user_name,user_email,created_at,category,description,image_path,city,area,latitude,longitude,ai_detections,ai_confidence,severity,priority,status,department
+CF-118C951F,U-535C5A52,Gagan,gaganmittal00@gmail.com,2026-09-13 17:10:35,Unclassified civic issue,More garbage has collect clean this.,data\report_images\CF-118C951F.jpg,Jaipur,Govindpura,,,,,,Unassessed,Open,Pending verification
