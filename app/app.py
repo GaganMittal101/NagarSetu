@@ -7,6 +7,7 @@ import uuid
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
+import re
 
 import pandas as pd
 import streamlit as st
@@ -19,13 +20,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 REPORTS = ROOT / "data" / "reports.csv"
 REPORT_IMAGES = ROOT / "data" / "report_images"
-ROAD_MODEL = (
-    ROOT
-    / "models"
-    / "runs"
-    / "NagarSetu_road_damage_baseline"
-    / "weights"
-    / "best.pt"
+
+# Support the renamed NagarSetu model folder and the original trained-model
+# location so the app continues to work after branding changes.
+ROAD_MODEL_CANDIDATES = [
+    ROOT / "models" / "runs" / "nagarsetu_road_damage_baseline" / "weights" / "best.pt",
+    ROOT / "models" / "runs" / "civicfix_road_damage_baseline" / "weights" / "best.pt",
+]
+ROAD_MODEL = next(
+    (candidate for candidate in ROAD_MODEL_CANDIDATES if candidate.exists()),
+    ROAD_MODEL_CANDIDATES[0],
 )
 
 # ---------------------------------------------------------------------
@@ -175,7 +179,7 @@ def save_report(
 ) -> str:
     ensure_store()
 
-    report_id = f"CF-{uuid.uuid4().hex[:8].upper()}"
+    report_id = f"NS-{uuid.uuid4().hex[:8].upper()}"
 
     parts = [part.strip() for part in (coords or "").split(",")]
     latitude = parts[0] if len(parts) >= 1 else ""
@@ -345,7 +349,11 @@ def register_user(
     if len(name) < 2:
         return False, "Please enter your full name."
 
-    if "@" not in email or "." not in email.split("@")[-1]:
+    # Normalize common browser/autofill whitespace and validate the full address.
+    email = email.strip().replace("\u200b", "")
+    email = re.sub(r"\s+", "", email)
+    email_pattern = r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$"
+    if not re.fullmatch(email_pattern, email, flags=re.IGNORECASE):
         return False, "Please enter a valid email address."
 
     if len(password) < 8:
@@ -401,7 +409,7 @@ def register_user(
 
 
 def authenticate_user(email: str, password: str) -> dict | None:
-    email = email.strip().lower()
+    email = re.sub(r"\s+", "", (email or "").replace("\u200b", "")).strip().lower()
 
     if not email or not password:
         return None
@@ -464,12 +472,6 @@ def render_auth_page() -> None:
 .auth-right-panel{padding:35px 30px 30px 18px}
 .auth-panel-title{color:#0B2550;font-size:36px;line-height:1.05;font-weight:800;letter-spacing:-.035em}
 .auth-panel-copy{color:#6B7C91;font-size:15px;line-height:1.6;margin-top:7px;margin-bottom:22px}
-.auth-demo{
-    margin-top:18px;padding:14px 16px;border-radius:14px;
-    background:#FFF7DB;border:1px solid #FFDA70
-}
-.auth-demo-title{color:#735000;font-size:12px;font-weight:800}
-.auth-demo-copy{color:#7D6935;font-size:11px;line-height:1.55;margin-top:4px}
 @media(max-width:900px){
     .auth-left-panel{min-height:520px;padding:36px}
     .auth-right-panel{padding:24px 6px}
@@ -569,8 +571,14 @@ def render_auth_page() -> None:
                     st.session_state.page = "Home"
                     st.rerun()
                 else:
+                    normalized_login_email = re.sub(
+                        r"\s+",
+                        "",
+                        (email or "").replace("\u200b", ""),
+                    ).strip().lower()
+
                     account_exists = any(
-                        record["email"] == email.strip().lower()
+                        record["email"] == normalized_login_email
                         for record in load_user_records()
                     )
 
@@ -599,6 +607,7 @@ def render_auth_page() -> None:
                 placeholder="you@example.com",
                 key="register_email",
             )
+            st.caption("Use a valid address such as name@example.com.")
             password = st.text_input(
                 "Password",
                 type="password",
@@ -633,13 +642,25 @@ def render_auth_page() -> None:
                     )
 
                     if ok:
-                        st.session_state.login_email = email.strip().lower()
-                        st.session_state.login_password = ""
-                        st.session_state.pending_auth_mode = "Sign In"
-                        st.session_state.auth_notice = (
-                            "Account created successfully. Enter your password to sign in."
-                        )
-                        st.rerun()
+                        # Sign the newly created account in immediately. This avoids
+                        # a fragile "create -> sign in again" transition and confirms
+                        # the saved credentials are actually usable.
+                        created_user = authenticate_user(email, password)
+                        if created_user:
+                            st.session_state.authenticated = True
+                            st.session_state.user = created_user
+                            st.session_state.page = "Home"
+                            st.session_state.analysis = None
+                            st.session_state.submitted_report_id = None
+                            st.rerun()
+                        else:
+                            st.session_state.login_email = email.strip().lower()
+                            st.session_state.login_password = ""
+                            st.session_state.pending_auth_mode = "Sign In"
+                            st.session_state.auth_notice = (
+                                "Account created successfully. Please sign in with your new password."
+                            )
+                            st.rerun()
                     else:
                         st.error(message)
 
@@ -1415,7 +1436,7 @@ with st.sidebar:
     )
 
     current_user = st.session_state.user or {}
-    current_name = str(current_user.get("name", "Guest"))
+    current_name = str(current_user.get("name", "User"))
     current_city = str(current_user.get("city", "Unknown"))
     avatar = current_name[:1].upper() if current_name else "G"
 
@@ -1469,7 +1490,7 @@ st.markdown(
     f"""
     <div class="topbar">
         <div class="context">
-            NagarSetu <strong>/ {st.session_state.page}</strong>
+            NAGARSETU <strong>/ {st.session_state.page}</strong>
         </div>
         <div class="profile">
             <span class="avatar">{str((st.session_state.user or {}).get("name", "Guest"))[:1].upper()}</span>
@@ -2395,4 +2416,3 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
